@@ -1,8 +1,11 @@
+import os
+import wget
 
 
 ###Function to download training and testing data to the Data folder
 
-def load_data(filenames,urls):
-    import wget
+def load_data(urls,filenames):
+    ###Download the files from the server
     for i in range(0,len(filenames)):
-        wget.download(urls[i],out=filenames[i])
+        print("Downloading file " + urls[i] + ", " + str(i+1) + " out of " + str(len(filenames)))
+        temp = wget.download(urls[i],out=filenames[i])

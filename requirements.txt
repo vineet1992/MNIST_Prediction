@@ -1,0 +1,9 @@
+wget
+pathlib
+docopt
+numpy
+Keras
+tensorflow
+protobuf <= 3.6.0
+matplotlib
+talos
