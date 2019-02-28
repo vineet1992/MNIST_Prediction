@@ -11,7 +11,7 @@ Usage:
     MNIST.py download <dataset-dir>
     MNIST.py train <dataset-dir> <model-name> <model-description-file> [-s SPLIT]
     MNIST.py test <comparison-name> <dataset-dir> <model-names>
-    MNIST.py explore <dataset-dir> <model-name> [-r RATE] [-b BATCH] [-l LAYERS] [-o OPTIMIZER] [-d DROPOUT] [-k KERNEL] [-p POOL] [-y DECAY] [-m MOMENTUM]
+    MNIST.py explore <dataset-dir> <model-name> [-f FILE] [-z SIZE] [-c CONV] [-v CLAYERS] [-r RATE] [-b BATCH] [-l LAYERS] [-o OPTIMIZER] [-d DROPOUT] [-k KERNEL] [-p POOL] [-y DECAY] [-m MOMENTUM] [-e EPOCHS]
     MNIST.py (-h | --help)
 Arguments:
     <dataset-dir>  Directory to look for dataset. This should be created by using download
@@ -21,19 +21,20 @@ Arguments:
     <comparison-name> Name of test comparison (for output file creation)
 Options:
     -s, --split-percent SPLIT       Proportion of samples to send to train set [default: 0.9]
-    -r, --rate RATE                 Comma separated list of learning rates to explore [default: 0.001,0.01,0.1,1]
-    -b, --batch BATCH               Comma separated list of batch sizes to explore [default: 10,100,1000]
-    -l, --layers LAYERS             Comma separated list of number of fully connected layers to explore [default: 0,1,2,3]
-    -c, --conv CONV                 Comma separated list of number of convolutional filters to explore[default: 16,32,64]
+    -r, --rate RATE                 Comma separated list of learning rates to explore [default: 0.001]
+    -b, --batch BATCH               Comma separated list of batch sizes to explore [default: 1000]
+    -l, --layers LAYERS             Comma separated list of number of fully connected layers to explore [default: 1,2,3]
+    -c, --conv CONV                 Comma separated list of number of convolutional filters to explore[default: 16,32]
     -o, --opt OPTIMIZER             Comma separated list of optimizers to try [default: Adam,RMSProp]
     -d, --dropout DROPOUT           Comma separated list of dropout percentage [default: 0.1,0.25,0.5]
-    -e, --epochs EPOCHS             Comma separated list of epoch sizes for training [default: 1,10,100,1000]
-    -dense SIZE                     Comma separated list of number of neurons in output of hidden layer [default: 16,32,64]
-    -k, --kernel KERNEL             Comma separated list of kernel sizes for convolutional layers [default: 1,3,5]
-    -p, --pool POOL                 Comma separated list of sizes for max pooling layer [default: 1,2,3]
-    -y, --decay DECAY               Comma separated list of decay values for optimization [default: 0.0001,0.001,0.01]
+    -e, --epochs EPOCHS             Comma separated list of epoch sizes for training [default: 5,10,15]
+    -z, --dense SIZE                Comma separated list of neurons in output of hidden layer [default: 128,256]
+    -k, --kernel KERNEL             Comma separated list of kernel sizes for convolutional layers [default: 3,5]
+    -p, --pool POOL                 Comma separated list of sizes for max pooling layer [default: 2,3]
+    -y, --decay DECAY               Comma separated list of decay values for optimization [default: 0.0001]
     -m, --mom MOMENTUM              Comma separated list of momentum values for optimization [default: 0.25,0.5,0.75]
-    -co, --convlayers CLAYERS       Comma separated list of number of convolutional layers to try before max pooling [default: 1,2,3]
+    -v, --convlayers CLAYERS        Comma separated list of number of convolutions before max pooling [default: 1,2,3]
+    -f, --file FILE                 Filename pointing to a file with scan results from Talos
     -h, --help                      Show this screen.
 """
 
@@ -113,7 +114,9 @@ def main():
         print(mdl.test())
 
     elif(arguments['explore']):
+
         print(arguments)
+
 
         ###Create dataset object using directory and partition amount in arguments
         data = Dataset(arguments['<dataset-dir>'] + "/Train.gz", arguments['<dataset-dir>'] + "/Train_Labels.gz",
@@ -123,12 +126,13 @@ def main():
         mdl = Model(data, arguments['<model-name>'])
 
         ###Convert the full arguments list to only those relevant to parameters
-        params = convertParams(arguments)
-
-        print(params)
+        hyperparams = convertParams(arguments)
 
         ###Explore hyperparameter space
-        #result = mdl.explore(arguments))
+        if len(arguments['--file']) > 0:
+            mdl.exploreByFile(arguments['--file'][0])
+        else:
+            result = mdl.explore(hyperparams)
 
         ###Output relevant plots to file TODO
 

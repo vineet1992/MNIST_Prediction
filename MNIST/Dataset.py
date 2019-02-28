@@ -22,7 +22,11 @@ class Dataset:
             self.partition = 0.9
         else:
             self.partition = partition
-
+        data = self._load_data()
+        labels = self._load_labels()
+        allData = np.column_stack((data,labels))
+        self.random.shuffle(allData)
+        self.allData = allData
 
     def _load_data(self):
         '''Returns a shuffled list of 3D Matrices (x) and a list of output labels (y)
@@ -93,17 +97,25 @@ class Dataset:
 
     def get_full_set(self):
         '''Returns the entire dataset'''
-        data = self._load_data()
-        labels = self._load_labels()
-        allData = np.column_stack((data,labels))
-        self.random.shuffle(allData)
-        return allData
+        return self.allData
 
 
     def get_train_set(self):
         ''' Returns the first <partition> % of the dataset (training data)'''
         data = self.get_full_set()
         return data[0:int(self.partition*len(data))]
+
+    def getFullX(self):
+        ''' Returns the full set of images'''
+        data = self.get_full_set()
+        return data[:,0:(data.shape[1]-1)]
+
+    def getFullY(self):
+        '''Returns the full set of labels'''
+        data = self.get_full_set()
+        Y = to_categorical(data[:,data.shape[1]-1])
+        return Y
+
 
     def getTrainX(self):
         ''' Returns just the training images from the dataset '''

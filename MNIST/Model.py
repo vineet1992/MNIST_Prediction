@@ -3,16 +3,15 @@
 
 
 from keras.utils.np_utils import to_categorical #To one-hot encode the output labels
-from keras import Sequential
-from keras import layers
-from keras import Model
-from keras.models import model_from_json
 from keras.models import load_model
 from MNIST.ModelParser import ModelParser
+from MNIST.Exploration_Model import exploration_model
 import math
 import numpy as np
 import os
 import matplotlib.pyplot as mp
+import talos as ta
+
 
 class Model:
 
@@ -24,13 +23,24 @@ class Model:
         :param normalize: Should the data be normalized?
         '''
 
+        self.data = data
+        ###If the partitioning isn't 0 percent (only test set), then extract the training set
         if not data.partition==0:
+
+            ###Extract training set
             trainSet = data.get_train_set()
 
+            ###Extract only training images
             self.trainX = trainSet[:,0:(trainSet.shape[1]-1)]
+
+            ###Extract number of rows in the images
             self.rows = int(math.sqrt(self.trainX.shape[1]))
+
+            ###Normalize the images
             if(normalize):
                 self.trainX = self.trainX/255.0
+
+            ###Convert to categorical one-hot encoding
             self.trainY = to_categorical(trainSet[:,trainSet.shape[1]-1])
 
 
@@ -67,6 +77,11 @@ class Model:
         self.model.fit(self.trainX, self.trainY,
                                  batch_size=self.batchSize,epochs=self.epochs)
 
+
+    def reshape(self,X):
+        '''Reshapes images array to fit MNIST format for Keras'''
+        return np.reshape(X,(-1,self.rows,self.rows,1))
+
     def test(self):
         '''
         Creates predictions on the test set based on this trained model
@@ -94,13 +109,64 @@ class Model:
         print("Saved model to disk")
 
 
+    def exploreByFile(self,fileName):
+        '''
+        Explores hyperparameter space and outputs diagnostic plots (given
+        :param fileName: The name of results file
+        :return: None
+        '''
+        ###TODO Complete creation of directory and writing out plots to the directory
+
+
+        ###Load in scan file
+        r = ta.Reporting(fileName)
+
+        ###Extract absolute directory path of this script
+        #script_dir = os.path.dirname(__file__)  # <-- absolute dir the script is in
+
+        ###Get output directory from user-specified argument
+        #dataDir = script_dir + "/../" + arguments['<dataset-dir>']
+
+        ###Create data directory if doesn't exist
+        #try:
+         #   os.mkdir(dataDir)
+        #except:
+         #   print("Directory already exists, not creating...")
+
+        ###Plot correlation heatmap
+        r.plot_corr()
+        mp.savefig('Correlation.png')
+
+        ###Plot histogram of metric accuracy
+        r.plot_hist()
+        mp.savefig('Histogram.png')
+
+        ###Bar Plots multi-dimensional
+        r.plot_bars('--epochs', 'val_acc', '--batch', '--dense')
+        mp.savefig('Training.png')
+
+        r.plot_bars('--epochs','val_acc','--convlayers','--conv')
+        mp.savefig('Convolutions.png')
+
+        r.plot_bars('--epochs', 'val_acc', '--layers', '--dense')
+        mp.savefig('Fully_Connected.png')
+
 
     def explore(self,params):
         '''
         Explores hyperparameter space and outputs diagnostic plots to file
         :param params: A dictionary of hyperparameters to explore
-        :return:
+        :return: The talos scan history
         '''
+        x = self.reshape(self.data.getFullX())
+        y = self.data.getFullY()
+        h = ta.Scan(x, y, params=params,
+                    model=exploration_model,
+                    dataset_name=self.name,
+                    experiment_no='1',
+                    grid_downsample=.1)
+
+        return h
 
 
     def loadModel(self):
