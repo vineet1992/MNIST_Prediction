@@ -3,8 +3,11 @@ MNIST Digit Classification using Convolutional Neural Networks
 
 This project presents a system for training, tuning hyperparameters, and evaluating a Convolutional Neural Network for MNIST digit classification.
 
+# Best Model and Process to Create it
 
-# Production System for MNIST Classification
+
+
+# Details Production System for MNIST Classification
 
 The MNIST handwritten dataset is a popular benchmark for image classification algorithms, especially CNN's. The purpose of this project is to have an enclosed system for beginners to experiment with CNN architectures on the MNIST dataset without doing any extra work. The project includes commands for downloading the data, parsing a CNN model from a text file and training the CNN, Hyperparameter exploration using Talos, and Evaluating proposed CNN's on the test set and serializing output models.
 
