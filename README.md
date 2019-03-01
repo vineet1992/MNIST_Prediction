@@ -7,7 +7,7 @@ This project presents a system for training, tuning hyperparameters, and evaluat
 
 
 
-# Details Production System for MNIST Classification
+# Full System for MNIST Classification
 
 The MNIST handwritten dataset is a popular benchmark for image classification algorithms, especially CNN's. The purpose of this project is to have an enclosed system for beginners to experiment with CNN architectures on the MNIST dataset without doing any extra work. The project includes commands for downloading the data, parsing a CNN model from a text file and training the CNN, Hyperparameter exploration using Talos, and Evaluating proposed CNN's on the test set and serializing output models.
 
