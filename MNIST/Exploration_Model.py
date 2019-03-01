@@ -5,7 +5,7 @@ from keras.optimizers import RMSprop
 
 ''' This file defines the architecture of the CNN model that will be explored using Talos hyperparameter optimization
     If you would like to change which hyperparameters are explored, 
-    be sure to change the model, change the params_used variable, and change the input parameters in main.py
+    be sure to change the model, change the params_used variable, and change the input parameters in ____main__.py
 '''
 
 ##TODO Use optimizer type as a hyperparameter
