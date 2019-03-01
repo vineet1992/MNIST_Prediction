@@ -20,7 +20,7 @@ Ensure that you are the main directory of the project in order to access require
 
 The data is downloaded directly from this link: "http://yann.lecun.com/exdb/mnist/" To do so, please use the following command
 
-python main.py download /<dataset-dir>
+python main.py download \<dataset-dir>
   
 The argument specifies the name of the directory to download the data to. Please keep this consistent throughout all commands of the project
 
@@ -41,20 +41,20 @@ Next, the file will have N lines consisting of components of a model architectur
 ### 2D Convolution
 For a 2D convolutional layer, the syntax is
 
-Conv,[num-filters],[kernel-rows],[kernel-cols],[activation-func]
+Conv,\<num-filters>,\<kernel-rows>,\<kernel-cols>,\<activation-func>
   
 Ensure the activation function is a correctly specified activation as required by Keras.
 
 ### Max Pooling
 For a max pooling layer, the syntax is
 
-MaxPool,'<kernel-rows'>,'<kernel-cols'>
+MaxPool,\<kernel-rows>,\<kernel-cols>
   
 ### Dropout
 
 For a dropout regularization of the previous layer, the syntax is
 
-Dropout,'<dropout-proportion'>
+Dropout,\<dropout-proportion>
   
 ### Flatten
 To flatten a the convolutional layers for preparation as input to the fully connected layers, the syntax is just:
@@ -65,7 +65,7 @@ Flatten
 
 For fully connected layers the syntax is:
 
-Dense,'<num-neurons'>,'<activation-func'>
+Dense,\<num-neurons>,\<activation-func>
   
 Again, be sure the activation function is a valid Keras activation
 
@@ -73,9 +73,9 @@ Again, be sure the activation function is a valid Keras activation
 Once the model architecture is fully specified the syntax for the final lines of the file consist of:
 
 Optimizer:
-'<learning-rate'>,'<decay'>
-'<num-epochs'>
-'<batch-size'>
+\<learning-rate>,\<decay>
+\<num-epochs>
+\<batch-size>
   
 Note that currently only Adam optimization is being used. Feel free to expand the ModelParser to improve functionality!
 
