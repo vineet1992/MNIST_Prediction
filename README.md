@@ -11,6 +11,10 @@ Training:
 Validation:
 Testing:
 
+## Steps to Reproduce
+
+First, clone the repository and set up a virtual environment. Then install all dependencies using the pip command listed under the dependencies heading. Next, ensure you are in the project directory ("MNIST_Prediction") and follow the commands below.
+
 The exact commands to reproduce this result are:
 
     python MNIST download Data
@@ -18,9 +22,14 @@ The exact commands to reproduce this result are:
     python MNIST test Results Data Optimal
 
 This will produce two files, one is "Model_Output/Optimal.txt." This contains the training and validation accuracy. 
-The second file is "Results.txt" which contains the Testing accuracy.
+The second file is "Results.txt" which contains the Testing accuracy. To inspect and alter the model architecture, please see the Models/optimized_model.txt file and the Model Specification markdown file for instructions.
 
 # How did I arrive at this model?
+
+TODO
+
+
+
 
 
 # Full System for MNIST Classification
