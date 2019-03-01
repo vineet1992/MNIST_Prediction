@@ -79,7 +79,7 @@ Optimizer:
   
 Note that currently only Adam optimization is being used. Feel free to expand the ModelParser to improve functionality!
 
-### For help, consult the example_model.txt file!
+### For help, consult the example_model.txt file! All model files should be saved in the Models folder.
 
  
 ## License
