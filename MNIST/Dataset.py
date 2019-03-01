@@ -3,6 +3,7 @@ from keras.utils.np_utils import to_categorical
 import random
 import struct
 import gzip
+import math
 
 
 ###We define a dataset as a set of images and a set of labels for each image###
@@ -46,6 +47,10 @@ class Dataset:
 
         ###Save the shuffled dataset
         self.allData = allData
+
+
+        ###Ensure correctness of the data
+        self.runTests()
 
     def _load_data(self):
         '''Returns a shuffled list of Numpy 3D Matrices (x)
@@ -175,3 +180,37 @@ class Dataset:
         ''' Returns the last <1-partition> % of the dataset (testing data)'''
         data = self.get_full_set()
         return data[int(self.partition*len(data)):len(data)]
+
+    def runTests(self):
+        rows = self.allData.shape[0] ###number of samples
+        cols = self.allData.shape[1] ###number of pixels + 1
+
+        ###Squareroot of cols-1 should be a whole number
+
+        if not math.sqrt(cols-1).is_integer():
+            print("Failed image is a square test")
+            exit(-1)
+
+        ###confirm dimensions of trainX,testX,trainY,testY based on value of partition
+        trainX = self.getTrainX()
+        trainY = self.getTrainY()
+        testX = self.getTestX()
+        testY = self.getTestY()
+        trainRows = self.partition*rows
+        testRows = rows-trainRows
+
+        if not trainX.shape[0]==trainRows:
+            print("Training set has the wrong number of rows based on partition = " + str(self.partition) + ", Found: " + str(trainX.shape[0]) + ", expected: " + str(trainRows))
+            exit(-1)
+        if not testX.shape[0]==testRows:
+            print("Testing set has the wrong number of rows based on partition = " + str(self.partition) + ", Found: " + str(testX.shape[0]) + ", expected: " + str(testRows))
+            exit(-1)
+        if not trainX.shape[0]==len(trainY):
+            print("Training set and training labels do not match")
+            exit(-1)
+        if not testX.shape[0]==len(testX):
+            print("Testing set and testing labels do not match")
+            exit(-1)
+
+
+        print("All tests passed for checking dataset consistency")

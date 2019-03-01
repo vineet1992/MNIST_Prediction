@@ -4,7 +4,7 @@
 #                                       #
 #########################################
 
-
+###TODO Scripts to test model parser and dataset funcitonality
 
 """MNIST - Complete package to download the data, explore hyperparameters, train, and test a Convolutional Neural Network on the MNIST dataset
 Usage:
