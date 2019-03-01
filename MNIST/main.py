@@ -60,6 +60,9 @@ def main():
     ###Get output directory from user-specified argument
     dataDir = script_dir + "/../" + arguments['<dataset-dir>']
 
+    ###Get directory for model files
+    modelDir = script_dir + "/../Models"
+
     ###Download dataset to the directory specified
     if(arguments['download']):
 
@@ -93,8 +96,11 @@ def main():
         ###Create model object from training data
         mdl = Model(data,arguments['<model-name>'])
 
-        ###Train the model based upon the
-        h = mdl.train(arguments['<model-description-file>'])
+        ###Create model file path
+        modelFile = modelDir + "/" + arguments['<model-description-file>']
+
+        ###Train the model based upon the specified model file
+        h = mdl.train(modelFile)
 
         ###Apply the model to the dev set
         r = mdl.test()
