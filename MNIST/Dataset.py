@@ -1,8 +1,15 @@
 from pathlib import Path
 import numpy as np
 from keras.utils.np_utils import to_categorical
+import random
+import struct
+import gzip
+
 
 ###We define a dataset as a set of images and a set of labels for each image###
+
+magicLabel = 2049 ###Magic number for reading label files
+magicImages = 2051 ###Magic number for reading image files
 
 class Dataset:
 
@@ -13,30 +20,38 @@ class Dataset:
          labelFile - The label file (absolute path)
          partition - proportion of the dataset to be allocated to the Training Set
          '''
-        import random
+
+        ###Initialize random object and seed
         self.random = random
         self.random.seed = random.seed(42)
+
+        ###Save image and label files
         self.train = imageFile
         self.labels = labelFile
+
+        ###Default partition value is 90% train-test split
         if(partition==None):
             self.partition = 0.9
         else:
             self.partition = partition
+
+        ###Load data and labels from file
         data = self._load_data()
         labels = self._load_labels()
+
+        ###Merge datasets together
         allData = np.column_stack((data,labels))
+
+        ###Shuffle the data according to the random seed
         self.random.shuffle(allData)
+
+        ###Save the shuffled dataset
         self.allData = allData
 
     def _load_data(self):
-        '''Returns a shuffled list of 3D Matrices (x) and a list of output labels (y)
+        '''Returns a shuffled list of Numpy 3D Matrices (x)
         Parses the image and label zip files via binary reading
         Note that for optimal efficiency this assumes that the file can be read into memory (no buffering of data)'''
-
-        import struct
-        import gzip
-        x = []
-        y = []
         with gzip.open(self.train, 'rb') as f:
             bytes_read = f.read()
 
@@ -46,7 +61,7 @@ class Dataset:
         currByte +=4
 
         # Magic number should equal 2051 if read properly
-        assert (magic == 2051)
+        assert (magic == magicImages)
 
         ##Read number of images
         numImages = struct.unpack('>i', bytes_read[currByte:(currByte+4)])[0]
@@ -63,17 +78,32 @@ class Dataset:
         ###Read Pixel level data (for now each image is a full vector)
         totalPixels = rows*cols ##Total number of pixels in an image
         allImages = []
+
+
         for i in range(0, numImages):
+            ###Read one byte per pixel
             format = '>' + ('B' * totalPixels )
+
+            ###Convert this to integers
             image = struct.unpack(format, bytes_read[currByte:(currByte+totalPixels)])
+
+            ###Increment the file pointer to the next reading area
             currByte = currByte + (rows*cols)
+
+            ###Append the image to the fullset of images
             allImages.append(image)
+
+        ###Return a numpy array format of all images
         return np.array(allImages)
 
 
     def _load_labels(self):
-        import struct
-        import gzip
+        '''
+        Loads the labels for each image from the downloaded dataset
+        Note that download.py must be run prior to loading data or labels
+        :return: A numpy array of image labels as integers
+        '''
+
         with gzip.open(self.labels, 'rb') as f:
             bytes_read = f.read()
 
@@ -82,13 +112,15 @@ class Dataset:
         magic = struct.unpack('>i', bytes_read[currByte:(currByte+4)])[0]
         currByte +=4
 
-        # Magic number should equal 2051 if read properly
-        assert (magic == 2049)
+        # Magic number should equal 2049 if read properly
+        assert (magic == magicLabel)
 
         ##Read number of images
         numImages = struct.unpack('>i', bytes_read[currByte:(currByte+4)])[0]
 
+        ###Increment one integer ahead (4 bytes)
         currByte+=4
+
         ###Read each label and append to output vector
         y = struct.unpack('>' + 'B' * numImages, bytes_read[currByte:(currByte+numImages)])
 
@@ -111,7 +143,7 @@ class Dataset:
         return data[:,0:(data.shape[1]-1)]
 
     def getFullY(self):
-        '''Returns the full set of labels'''
+        '''Returns the full set of labels as one-hot encoded categorical vectors'''
         data = self.get_full_set()
         Y = to_categorical(data[:,data.shape[1]-1])
         return Y

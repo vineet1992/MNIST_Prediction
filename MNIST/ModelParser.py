@@ -2,7 +2,7 @@
 
 from keras import Sequential
 from keras import layers
-from keras.optimizers import RMSprop
+from keras.optimizers import Adam
 import math
 
 class ModelParser:
@@ -31,62 +31,79 @@ class ModelParser:
         ###True until we have created our first layer
         firstLayer = True
 
-        ###Loop through the model specification file
-        while (text_file.readable()):
+        try:
 
-            ###Read the next line
-            line = text_file.readline()
-            params = line.replace('\n','').split(",")
-            ##If we have already read the "Layers:" line
-            if (begin):
+            ###Loop through the model specification file
+            while (text_file.readable()):
 
-                ###Conv2D Layer
-                if (line.startswith("Conv")):
+                ###Read the next line
+                line = text_file.readline()
+                params = line.replace('\n','').split(",")
+                ##If we have already read the "Layers:" line
+                if (begin):
 
-                    ###If this is the first layer, include the input shape
-                    if (firstLayer):
-                        model.add(layers.Conv2D(
-                            int(params[1]), kernel_size=(int(params[2]), int(params[3])),
-                            activation=params[4], input_shape=(self.rows, self.rows, 1)))
-                        firstLayer = False
+                    ###Conv2D Layer
+                    if (line.startswith("Conv")):
 
-                    ###Otherwise, just include the specified params
+                        ###If this is the first layer, include the input shape
+                        if (firstLayer):
+                            model.add(layers.Conv2D(
+                                int(params[1]), kernel_size=(int(params[2]), int(params[3])),
+                                activation=params[4], input_shape=(self.rows, self.rows, 1)))
+                            firstLayer = False
+
+                        ###Otherwise, just include the specified params
+                        else:
+                            model.add(layers.Conv2D(
+                                int(params[1]), kernel_size=(int(params[2]), int(params[3])),
+                                activation=params[4], ))
+
+
+                    ##Max pooling layer
+                    elif (line.startswith("MaxPool")):
+                        model.add(layers.MaxPool2D(pool_size=(int(params[1]), int(params[2]))))
+
+                    ###Dropout layer
+                    elif (line.startswith("Dropout")):
+                        model.add(layers.Dropout(float(params[1])))
+                    ###Flatten layer
+                    elif (line.startswith("Flatten")):
+                        model.add(layers.Flatten())
+
+                    ###Dense layer
+                    elif (line.startswith("Dense")):
+                        model.add(layers.Dense(int(params[1]), activation=params[2]))
+
+                    elif(line.startswith("Optimizer")):
+                        break
+                    ###Unable to understand this layer
                     else:
-                        model.add(layers.Conv2D(
-                            int(params[1]), kernel_size=(int(params[2]), int(params[3])),
-                            activation=params[4], ))
+                        print("Can't understand the line " + line)
+                        ##TODO Add invalid model file error message here
+
+                elif (line.startswith("Layers")):
+                    begin = True
+            ###get the optimizer parametetrs
+            optParams = text_file.readline().split(",")
+
+            ###Create Adam optimizer
+            optimizer = Adam(lr = float(optParams[0]),decay = float(optParams[1]))
+
+            ###Compile the model with categorical crossentropy loss
+            model.compile(optimizer=optimizer, loss="categorical_crossentropy", metrics=["accuracy"])
+
+            ###Read the number of epochs from the file
+            epochs = int(text_file.readline())
+
+            ###Read the batch size from the file
+            batchSize = int(text_file.readline())
 
 
-                ##Max pooling layer
-                elif (line.startswith("MaxPool")):
-                    model.add(layers.MaxPool2D(pool_size=(int(params[1]), int(params[2]))))
+            ###Close the file
+            text_file.close()
+        except:
+            print("Unable to parse the model file... please examine the example file and ensure you have the proper specs. For further help, contact us")
 
-                ###Dropout layer
-                elif (line.startswith("Dropout")):
-                    model.add(layers.Dropout(float(params[1])))
-                ###Flatten layer
-                elif (line.startswith("Flatten")):
-                    model.add(layers.Flatten())
-
-                ###Dense layer
-                elif (line.startswith("Dense")):
-                    model.add(layers.Dense(int(params[1]), activation=params[2]))
-
-                elif(line.startswith("Optimizer")):
-                    break
-                ###Unable to understand this layer
-                else:
-                    print("Can't understand the line " + line)
-                    ##TODO Add invalid model file error message here
-
-            elif (line.startswith("Layers")):
-                begin = True
-        ###get the optimizer parametetrs
-        optParams = text_file.readline().split(",")
-        optimizer = RMSprop(float(optParams[0]),float(optParams[1]),float(optParams[2]),float(optParams[3]))
-        model.compile(optimizer=optimizer, loss="categorical_crossentropy", metrics=["accuracy"])
-        epochs = int(text_file.readline())
-        batchSize = int(text_file.readline())
-        text_file.close()
+        ###Return the model and the epochs and batchsize for training!
         return [model,epochs,batchSize]
 

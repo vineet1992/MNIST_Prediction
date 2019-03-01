@@ -6,7 +6,7 @@
 
 
 
-"""MNIST - Complete package to train and test a Convolutional Neural Network on the MNIST dataset
+"""MNIST - Complete package to download the data, explore hyperparameters, train, and test a Convolutional Neural Network on the MNIST dataset
 Usage:
     MNIST.py download <dataset-dir>
     MNIST.py train <dataset-dir> <model-name> <model-description-file> [-s SPLIT]
@@ -48,6 +48,9 @@ import os
 
 def main():
     arguments = docopt(__doc__)
+
+    ###Extract absolute directory path of this script
+    script_dir = os.path.dirname(__file__)  # <-- absolute dir the script is in
 
     ###Download dataset to the directory specified
     if(arguments['download']):
@@ -92,7 +95,10 @@ def main():
         mdl.train(arguments['<model-description-file>'])
 
         ###Apply the model to the dev set
-        print(mdl.test())
+        r = mdl.test()
+
+        ###Print results to console
+        print("Dev Set Loss: " + str(r[0]) + ", Dev Set Accuracy: " + str(r[1]))
 
         ###Save the model to a serialized Keras file
         mdl.saveModel()
@@ -102,16 +108,30 @@ def main():
         ###Load the testing dataset
         data = Dataset(arguments['<dataset-dir>'] + "/Test.gz",arguments['<dataset-dir>'] + "/Test_Labels.gz",0)
 
-        ###TODO Incorporate ability to load multiple models and write results to a file
+        modelNames = arguments['<model-names>']
+        modelNames = modelNames.split(",")
 
-        ###Create the model object from the specified
-        mdl = Model(data,arguments['<model-names>'])
+        ###Load each file and write test set results to file
+        try:
+            file = open("Results.txt", "w")
+            file.write("Model_Name\tTest_Loss\tTest_Accuracy\n")
+            ###Loop through each model
+            for name in modelNames:
 
-        ###Load model from serialized model file
-        mdl.loadModel()
+                file.write(name + "\t")
+                ###Create the model object from the specified
+                mdl = Model(data,name)
 
-        ###Get Output statistics on the testing set
-        print(mdl.test())
+                ###Load model from serialized model file
+                mdl.loadModel()
+
+                ###Get Output statistics on the testing set
+                result = mdl.test()
+
+                file.write(str(result[0]) + "\t" + str(result[1]) + "\n")
+        except:
+            print("Unable to complete test results, please ensure that all of your model files exist in the Model_Output folder")
+
 
     elif(arguments['explore']):
 
@@ -133,8 +153,6 @@ def main():
             mdl.exploreByFile(arguments['--file'][0])
         else:
             result = mdl.explore(hyperparams)
-
-        ###Output relevant plots to file TODO
 
 
 if __name__ == '__main__':

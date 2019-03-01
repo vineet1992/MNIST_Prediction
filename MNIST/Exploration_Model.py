@@ -3,7 +3,12 @@ from keras import layers
 from keras.optimizers import Adam
 from keras.optimizers import RMSprop
 
+''' This file defines the architecture of the CNN model that will be explored using Talos hyperparameter optimization
+    If you would like to change which hyperparameters are explored, 
+    be sure to change the model, change the params_used variable, and change the input parameters in main.py
+'''
 
+##TODO Use optimizer type as a hyperparameter
 
 ###Define a set of keys going to be used in the exploration model here
 
@@ -54,7 +59,6 @@ def exploration_model(trainX, trainY, testX, testY, params):
     ###Add softmax output layer to predict probabilities
     model.add(layers.Dense(10,activation="softmax"))
 
-    ##TODO Use optimizer type as a hyperparameter
 
     ###Compile model
     model.compile(optimizer=Adam(lr=float(params['--rate']),
@@ -84,9 +88,13 @@ def convertParams(arguments):
     for key,value in arguments.items():
         if key in params_used:
             params[key] = value[0].rsplit(",")
+
+    ###Return this set of parameters
     return params
 
 
+
+###This is used to test that Talos grid search works (ignores all parameter values)
 def temp_test(trainX, trainY, testX, testY, params):
     '''
     Defines a CNN model to classify the MNIST dataset with hyperparameters left out for tuning using Talos.

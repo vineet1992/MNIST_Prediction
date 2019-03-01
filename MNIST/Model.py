@@ -1,8 +1,13 @@
 ###Takes as input a Dataset object (training) or a serialized model filename
 ### Methods for training and testing (which returns predictions given test data)
 
+'''
+This file defines a model for training and testing
+Required input is a Dataset object and a name for the model as a String representation
+This object contains methods for training a model, testing a model, loading and saving a model, and exploring hyperparameters of the model
 
-from keras.utils.np_utils import to_categorical #To one-hot encode the output labels
+'''
+
 from keras.models import load_model
 from MNIST.ModelParser import ModelParser
 from MNIST.Exploration_Model import exploration_model
@@ -11,6 +16,11 @@ import numpy as np
 import os
 import matplotlib.pyplot as mp
 import talos as ta
+
+
+mdlOutputDir = "Model_Output" ###Name of the output directory for saved models
+hyprOutputDir = "Hyperparam_Search" ###Name of the output directory for hyperparameter explorations
+script_dir = os.path.dirname(__file__)  ####Absolute dir the script is in
 
 
 class Model:
@@ -27,11 +37,8 @@ class Model:
         ###If the partitioning isn't 0 percent (only test set), then extract the training set
         if not data.partition==0:
 
-            ###Extract training set
-            trainSet = data.get_train_set()
-
             ###Extract only training images
-            self.trainX = trainSet[:,0:(trainSet.shape[1]-1)]
+            self.trainX = data.getTrainX()
 
             ###Extract number of rows in the images
             self.rows = int(math.sqrt(self.trainX.shape[1]))
@@ -40,19 +47,26 @@ class Model:
             if(normalize):
                 self.trainX = self.trainX/255.0
 
-            ###Convert to categorical one-hot encoding
-            self.trainY = to_categorical(trainSet[:,trainSet.shape[1]-1])
+            ###Extract one-hot encoded categorical labels
+            self.trainY = data.getTrainY()
 
-
+        ###If the partitioning is 1, this means we only have a training set
         if not data.partition==1:
-            testSet = data.get_test_set()
-            self.testX = testSet[:,0:(testSet.shape[1]-1)]
+
+            ###Extract the testing images
+            self.testX = data.getTestX()
+            ###Compute the number of rows in the testing images
             self.rows = int(math.sqrt(self.testX.shape[1]))
             if(normalize):
                 self.testX = self.testX/255.0
-            self.testY = to_categorical(testSet[:,testSet.shape[1]-1])
 
+            ###Extract the testing labels
+            self.testY = data.getTestY()
+
+        ###Set the model name
         self.name = modelName
+
+        ###Set whether or not the pixels are normalized to 0-1
         self.normalize = normalize
 
 
@@ -96,7 +110,6 @@ class Model:
         First checks whether or not the Model Output directory exists
         :return:  Returns true if the model was successfully serialized, and false otherwise
         '''
-        script_dir = os.path.dirname(__file__)  # <-- absolute dir the script is in
 
         dir = script_dir + "/../Model_Output"
         if not os.path.isdir(dir):
@@ -121,35 +134,26 @@ class Model:
         ###Load in scan file
         r = ta.Reporting(fileName)
 
-        ###Extract absolute directory path of this script
-        #script_dir = os.path.dirname(__file__)  # <-- absolute dir the script is in
-
-        ###Get output directory from user-specified argument
-        #dataDir = script_dir + "/../" + arguments['<dataset-dir>']
-
-        ###Create data directory if doesn't exist
-        #try:
-         #   os.mkdir(dataDir)
-        #except:
-         #   print("Directory already exists, not creating...")
+        dir = script_dir + "/../" + hyprOutputDir
+        dir = dir + "/" + self.name
 
         ###Plot correlation heatmap
         r.plot_corr()
-        mp.savefig('Correlation.png')
+        mp.savefig(dir + '/Correlation.png')
 
         ###Plot histogram of metric accuracy
         r.plot_hist()
-        mp.savefig('Histogram.png')
+        mp.savefig(dir + '/Histogram.png')
 
         ###Bar Plots multi-dimensional
         r.plot_bars('--epochs', 'val_acc', '--batch', '--dense')
-        mp.savefig('Training.png')
+        mp.savefig(dir + '/Training.png')
 
         r.plot_bars('--epochs','val_acc','--convlayers','--conv')
-        mp.savefig('Convolutions.png')
+        mp.savefig(dir + '/Convolutions.png')
 
         r.plot_bars('--epochs', 'val_acc', '--layers', '--dense')
-        mp.savefig('Fully_Connected.png')
+        mp.savefig(dir + '/Fully_Connected.png')
 
 
     def explore(self,params):
@@ -158,11 +162,22 @@ class Model:
         :param params: A dictionary of hyperparameters to explore
         :return: The talos scan history
         '''
+
+        dir = script_dir + "/../" + hyprOutputDir
+        if not os.path.isdir(dir):
+            os.makedirs(dir)
+
+        dir = dir + "/" + self.name
+        if not os.path.isdir(dir):
+            os.makedirs(dir)
+
+
+        name = dir + "/" + self.name
         x = self.reshape(self.data.getFullX())
         y = self.data.getFullY()
         h = ta.Scan(x, y, params=params,
                     model=exploration_model,
-                    dataset_name=self.name,
+                    dataset_name=name,
                     experiment_no='1',
                     grid_downsample=.1)
 
