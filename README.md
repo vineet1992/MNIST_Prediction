@@ -42,9 +42,25 @@ Again, \<dataset-dir> should be the same as the previous commands. \<comparison-
 
 # Exploring Hyperparameters
 
+python main.py explore <dataset-dir> <model-name> [-f FILE] [-z SIZE] [-c CONV] [-v CLAYERS] [-r RATE] [-b BATCH] [-l LAYERS] [-o OPTIMIZER] [-d DROPOUT] [-k KERNEL] [-p POOL] [-y DECAY] [-m MOMENTUM] [-e EPOCHS]
 
+One more time, \<dataset-dir> should be the same as in any other command. \<model-name> is an identifer used to create an output directory for the results of the hyperparameter scan. The definitions of all of the optional parameters that can be tested are as follows:
 
+    -r, --rate RATE                 Comma separated list of learning rates to explore [default: 0.001]
+    -b, --batch BATCH               Comma separated list of batch sizes to explore [default: 1000]
+    -l, --layers LAYERS             Comma separated list of number of fully connected layers to explore [default: 1,2]
+    -c, --conv CONV                 Comma separated list of number of convolutional filters to explore[default: 16,32]
+    -o, --opt OPTIMIZER             Comma separated list of optimizers to try [default: Adam,RMSProp]
+    -d, --dropout DROPOUT           Comma separated list of dropout percentage [default: 0.1,0.25]
+    -e, --epochs EPOCHS             Comma separated list of epoch sizes for training [default: 5,10,15]
+    -z, --dense SIZE                Comma separated list of neurons in output of hidden layer [default: 32,64]
+    -k, --kernel KERNEL             Comma separated list of kernel sizes for convolutional layers [default: 3,5]
+    -p, --pool POOL                 Comma separated list of sizes for max pooling layer [default: 2,3]
+    -y, --decay DECAY               Comma separated list of decay values for optimization [default: 0.0001]
+    -m, --mom MOMENTUM              Comma separated list of momentum values for optimization [default: 0.25,0.5,0.75]
+    -v, --convlayers CLAYERS        Comma separated list of number of convolutions before max pooling [default: 1,2]
 
+For this exploration the architecture was fixed at Convolutional layers first, followed by Maxpooling and dropout, and then flattening. Finally fully connected layers and softmax output with 10 categories (one per digit).
  
 ## License
 
