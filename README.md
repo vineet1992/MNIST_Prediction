@@ -3,8 +3,24 @@ MNIST Digit Classification using Convolutional Neural Networks
 
 This project presents a system for training, tuning hyperparameters, and evaluating a Convolutional Neural Network for MNIST digit classification.
 
-# Best Model and Process to Create it
+# Best Model and Process to Reproduce
 
+My best model had (accuracy, categorical cross-entropy losses) of 
+
+Training: 
+Validation:
+Testing:
+
+The exact commands to reproduce this result are:
+
+    python MNIST download Data
+    python MNIST train Data Optimal optimized_model
+    python MNIST test Results Data Optimal
+
+This will produce two files, one is "Model_Output/Optimal.txt." This contains the training and validation accuracy. 
+The second file is "Results.txt" which contains the Testing accuracy.
+
+# How did I arrive at this model?
 
 
 # Full System for MNIST Classification
