@@ -10,8 +10,9 @@ from keras.optimizers import RMSprop
 
 ##TODO Use optimizer type as a hyperparameter
 
-###Define a set of keys going to be used in the exploration model here
 
+
+###Define a set of keys going to be used in the exploration model here
 params_used = ["--dense","--batch","--conv","--decay","--dropout","--epochs","--kernel","--layers","--pool","--rate","--convlayers"]
 
 def exploration_model(trainX, trainY, testX, testY, params):
@@ -137,8 +138,6 @@ def temp_test(trainX, trainY, testX, testY, params):
 
     ###Add softmax output layer to predict probabilities
     model.add(layers.Dense(10,activation="softmax"))
-
-    ##TODO Use optimizer type as a hyperparameter
 
     ###Compile model
     model.compile(optimizer=RMSprop(0.0001,0.5,1e-8,0.0),

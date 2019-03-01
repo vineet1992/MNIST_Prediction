@@ -1,0 +1,12 @@
+Layers:
+Conv,8,3,3,relu
+MaxPool,2,2
+Dropout,0.25
+Flatten
+Dense,32,relu
+Dropout,0.25
+Dense,10,softmax
+Optimizer:
+0.001,1e-4
+5
+1000

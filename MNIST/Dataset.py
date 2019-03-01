@@ -1,4 +1,3 @@
-from pathlib import Path
 import numpy as np
 from keras.utils.np_utils import to_categorical
 import random
@@ -61,7 +60,7 @@ class Dataset:
         currByte +=4
 
         # Magic number should equal 2051 if read properly
-        assert (magic == magicImages)
+        assert magic == magicImages, "Incorrect download of the image file, please re-download and ensure connectivity"
 
         ##Read number of images
         numImages = struct.unpack('>i', bytes_read[currByte:(currByte+4)])[0]
@@ -113,7 +112,7 @@ class Dataset:
         currByte +=4
 
         # Magic number should equal 2049 if read properly
-        assert (magic == magicLabel)
+        assert magic == magicLabel, "Incorrect download of the label file, please repeat the download and ensure connectivity"
 
         ##Read number of images
         numImages = struct.unpack('>i', bytes_read[currByte:(currByte+4)])[0]
@@ -163,7 +162,7 @@ class Dataset:
     def getTestX(self):
         ''' Returns just the testing images from the dataset'''
         data = self.get_test_set()
-        testX = data[:0:(data.shape[1]-1)]
+        testX = data[:,0:(data.shape[1]-1)]
         return testX
 
     def getTestY(self):

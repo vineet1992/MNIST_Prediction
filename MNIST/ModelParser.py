@@ -1,5 +1,10 @@
-###This class defines how to parse a user-specified model input file to create a model
 
+
+
+'''
+    This file defines a model parser which converts a file (see example file in Models folder) into a keras CNN model
+    Currently this is extremely limited to only certain parameters, please see README for full functionality (and feel free to request more)
+'''
 from keras import Sequential
 from keras import layers
 from keras.optimizers import Adam
@@ -79,7 +84,6 @@ class ModelParser:
                     ###Unable to understand this layer
                     else:
                         print("Can't understand the line " + line)
-                        ##TODO Add invalid model file error message here
 
                 elif (line.startswith("Layers")):
                     begin = True

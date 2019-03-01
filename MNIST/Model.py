@@ -74,6 +74,7 @@ class Model:
         '''Parameters:
         modelFile - Model specification file (see README for correct syntax)
         Trains the model according to the specification file and outputs a trained keras model
+        :return: Cross-entropy loss and Prediction accuracy on the training set after the last epoch
         '''
 
         ###Create model parser object to handle model parsing
@@ -88,8 +89,12 @@ class Model:
         ###Reshape the data to work with Keras
         self.trainX = np.reshape(self.trainX,(-1,self.rows, self.rows, 1))
 
-        self.model.fit(self.trainX, self.trainY,
+        ###Fit the model and collect the history object
+        h = self.model.fit(self.trainX, self.trainY,
                                  batch_size=self.batchSize,epochs=self.epochs)
+
+        ###Return the loss and the accuracy on the training set after the final epoch
+        return (h.history["loss"][self.epochs-1],h.history["acc"][self.epochs-1])
 
 
     def reshape(self,X):
@@ -128,7 +133,6 @@ class Model:
         :param fileName: The name of results file
         :return: None
         '''
-        ###TODO Complete creation of directory and writing out plots to the directory
 
 
         ###Load in scan file
