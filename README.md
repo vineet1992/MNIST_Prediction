@@ -20,7 +20,7 @@ Ensure that you are the main directory of the project in order to access require
 
 The data is downloaded directly from this link: "http://yann.lecun.com/exdb/mnist/" To do so, please use the following command
 
-    python main.py download \<dataset-dir>
+    python main.py download <dataset-dir>
   
 The argument specifies the name of the directory to download the data to. Please keep this consistent throughout all commands of the project. The datasets will be downloaded as gzipped tarballs to save space on disk. They will be parsed when training/testing the model.
 
@@ -28,7 +28,7 @@ The argument specifies the name of the directory to download the data to. Please
 
 In order to train, a model specified using our model file format. Please use the following command:
 
-    python main.py train \<dataset-dir> \<model-name> \<model-description-file> [-s SPLIT]
+    python main.py train <dataset-dir> <model-name> <model-description-file> [-s SPLIT]
 
 Here, \<dataset-dir> should match the name used in the downloading step. \<model-name> will be the identifier used for the model for any output files. \<model-description-file> should be the filename of your specified model file (Please do not include any path information, just the file name).
 
@@ -36,7 +36,7 @@ This command will output a serialized Keras model file along with a simple text 
 
 # Testing a Model
 
-    python main.py test \<comparison-name> \<dataset-dir> \<model-names>
+    python main.py test <comparison-name> <dataset-dir> <model-names>
 
 Again, \<dataset-dir> should be the same as the previous commands. \<comparison-name> is an identifier used to produce the results, and \<model-names> is a comma separated list of model names that had been trained using the train command. The output of this command is a single text file with results for all of the models on the testing set (includes categorical-cross entropy loss and prediction accuracy).
 
