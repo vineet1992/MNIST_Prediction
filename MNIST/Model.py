@@ -134,12 +134,13 @@ class Model:
         :return: None
         '''
 
-
-        ###Load in scan file
-        r = ta.Reporting(fileName)
-
         dir = script_dir + "/../" + hyprOutputDir
         dir = dir + "/" + self.name
+
+        ###Load in scan file
+        r = ta.Reporting(dir + "/" + fileName)
+
+
 
         ###Plot correlation heatmap
         r.plot_corr()

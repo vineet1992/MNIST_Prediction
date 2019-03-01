@@ -15,7 +15,7 @@ Usage:
     MNIST.py (-h | --help)
 Arguments:
     <dataset-dir>  Directory to look for dataset. This should be created by using download
-    <model-name> Name of the model to be trained to create output directory
+    <model-name> Name of the model to be trained (This is used to create output directories and load files)
     <model-names> Comma separated list of model names to load for evaluation
     <model-description-file> File with model specification (see README for details)
     <comparison-name> Name of test comparison (for output file creation)
