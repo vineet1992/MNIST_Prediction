@@ -20,7 +20,7 @@ Ensure that you are the main directory of the project in order to access require
 
 The data is downloaded directly from this link: "http://yann.lecun.com/exdb/mnist/" To do so, please use the following command
 
-python main.py download /<dataset-dir/>
+python main.py download "dataset-dir"
   
 The argument specifies the name of the directory to download the data to. Please keep this consistent throughout all commands of the project
 
@@ -41,7 +41,7 @@ Next, the file will have N lines consisting of components of a model architectur
 ### 2D Convolution
 For a 2D convolutional layer, the syntax is
 
-Conv,'<num-filters'>,'<kernel-rows'>,'<kernel-cols'>,'<activation-func'>
+Conv,[num-filters],[kernel-rows],[kernel-cols],[activation-func]
   
 Ensure the activation function is a correctly specified activation as required by Keras.
 
