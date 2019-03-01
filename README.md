@@ -20,7 +20,7 @@ Ensure that you are the main directory of the project in order to access require
 
 The data is downloaded directly from this link: "http://yann.lecun.com/exdb/mnist/" To do so, please use the following command
 
-python main.py download "dataset-dir"
+python main.py download %lt;dataset-dir%gt;
   
 The argument specifies the name of the directory to download the data to. Please keep this consistent throughout all commands of the project
 
