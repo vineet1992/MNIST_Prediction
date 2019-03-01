@@ -22,7 +22,7 @@ The data is downloaded directly from this link: "http://yann.lecun.com/exdb/mnis
 
 python main.py download \<dataset-dir>
   
-The argument specifies the name of the directory to download the data to. Please keep this consistent throughout all commands of the project
+The argument specifies the name of the directory to download the data to. Please keep this consistent throughout all commands of the project. The datasets will be downloaded as gzipped tarballs to save space on disk. They will be parsed when training/testing the model.
 
 # Training a Model
 
