@@ -40,7 +40,7 @@ Options:
 
 
 from docopt import docopt
-from ..Data.download import load_data
+from download import load_data
 from Dataset import Dataset
 from Model import Model
 from Exploration_Model import convertParams
