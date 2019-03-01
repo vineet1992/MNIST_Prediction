@@ -138,7 +138,7 @@ def main():
 
         ###Load each file and write test set results to file
         try:
-            file = open("Results.txt", "w")
+            file = open(arguments['<comparison-name>'] + ".txt", "w")
             file.write("Model_Name\tTest_Loss\tTest_Accuracy\n")
             ###Loop through each model
             for name in modelNames:
