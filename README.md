@@ -31,13 +31,25 @@ The second file is "Results.txt" which contains the Testing accuracy. To inspect
 
 # How did I arrive at this model?
 
-TODO
+First I made some model architecture decisions based upon what I thought would be suitable for this problem. I decided upon a model that consists of some convolutional layers at the beginning with max pooling and dropout for regularization. Then, a series of fully connected layers (with dropout in the final connected layer) and a size 10 softmax layer for output. I used the softmax layer because we are interested in probabilities for each possible digit.
+
+With this model architecture, I used Talos to do a random grid search over hyperparameters to get a feel for how these impact validation set accuracy (see Figure 1 and 2). I immediately found that having more than one convolutional layer, and a filter size of at least 16 was necessary for accurate output. In addition, I found that having at least 128 fully connected layers was necessary for training set accuracy. The best performing hyperparameters for this search consisted of learning rate set at 0.001 and batch size 1000 so these were fixed for my second hyperparameter search. Another observation I found was that there were no instances of overfitting (no instances of training set accuracy increasing with decreasing validation set accuracy). This implied that more complicated networks could be attempted to achieve better training accuracy.
+
+The second round demonstrated that having a large number of epochs (at least 10) drives better model performance. In addition, I found that having more fully connected layers and convolutional layers improved performance. Lastly I found that low dropout rate was correlated with good validation set accuracy. 
+
+Putting all of these results together I arrived at my first successful model architecture. This consisted of two layers of 32 convolutional filters (3x3 kernels) along with (2x2) max pooling and 25% dropout. This was then flattened and fed to two 256 neuron fully connected layers with 25% dropout again, and then the softmax. 
+
+I found that reducing the dropout did not cause overfitting. In addition, I found that adding a second set of convolutional filters improved training set accuracy and dev set accuracy. This is how I arrived at my second model. Finally, to see if performance could be pushed further, I increased the number of epochs to 15 and saw no reduction in dev set performance, implying that the model was well regularized. This was my final model!
 
 
 
 
 
-# Full System for MNIST Classification
+
+
+
+
+# Full Instructions for MNIST Classification
 
 The MNIST handwritten dataset is a popular benchmark for image classification algorithms, especially CNN's. The purpose of this project is to have an enclosed system for beginners to experiment with CNN architectures on the MNIST dataset without doing any extra work. The project includes commands for downloading the data, parsing a CNN model from a text file and training the CNN, Hyperparameter exploration using Talos, and Evaluating proposed CNN's on the test set and serializing output models.
 
