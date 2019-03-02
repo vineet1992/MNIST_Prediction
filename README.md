@@ -23,7 +23,7 @@ Next, ensure you are in the project directory ("MNIST_Prediction") and follow th
 The exact commands to reproduce this result are:
 
     python MNIST download Data
-    python MNIST train Data Optimal optimized_model
+    python MNIST train Data Optimal optimized_model.txt
     python MNIST test Results Data Optimal
 
 This will produce two files, one is "Model_Output/Optimal.txt." This contains the training and validation accuracy. 
