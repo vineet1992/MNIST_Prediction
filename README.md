@@ -7,9 +7,9 @@ This project presents a system for training, tuning hyperparameters, and evaluat
 
 My best model had (accuracy, categorical cross-entropy losses) of 
 
-Training: 
-Validation:
-Testing:
+Training: (99.763, 0.00686)
+Validation: (99.35, 0.0262)
+Testing: (98.7, 0.0435)
 
 ## Steps to Reproduce
 
