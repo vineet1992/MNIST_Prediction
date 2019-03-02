@@ -4,7 +4,7 @@
 #                                       #
 #########################################
 
-###TODO Scripts to test model parser and dataset funcitonality
+###TODO Script to test model parser
 
 """MNIST - Complete package to download the data, explore hyperparameters, train, and test a Convolutional Neural Network on the MNIST dataset
 Usage:
@@ -58,10 +58,10 @@ def main():
     script_dir = os.path.dirname(__file__)  # <-- absolute dir the script is in
 
     ###Get output directory from user-specified argument
-    dataDir = script_dir + "/../" + arguments['<dataset-dir>']
+    dataDir = os.path.join(os.path.dirname(script_dir),arguments['<dataset-dir>'])
 
     ###Get directory for model files
-    modelDir = script_dir + "/../Models"
+    modelDir = os.path.join(os.path.dirname(script_dir),"Models")
 
     ###Download dataset to the directory specified
     if(arguments['download']):
@@ -91,13 +91,13 @@ def main():
     elif(arguments['train']):
 
         ###Create dataset object using directory and partition amount in arguments
-        data = Dataset(dataDir + "/Train.gz", dataDir + "/Train_Labels.gz",partition = float(arguments['--split-percent'][0]))
+        data = Dataset(os.path.join(dataDir,"Train.gz"), os.path.join(dataDir,"Train_Labels.gz"),partition = float(arguments['--split-percent'][0]))
 
         ###Create model object from training data
         mdl = Model(data,arguments['<model-name>'])
 
         ###Create model file path
-        modelFile = modelDir + "/" + arguments['<model-description-file>']
+        modelFile = os.path.join(modelDir,arguments['<model-description-file>'])
 
         ###Train the model based upon the specified model file
         h = mdl.train(modelFile)
@@ -114,7 +114,7 @@ def main():
         ###Load each file and write test set results to file
         try:
             ###Create and open file for writing training and validation accuracies
-            file = open(script_dir + "/../Model_Output/" + arguments['<model-name>'] + ".txt", "w")
+            file = open(os.path.join(os.path.join(os.path.dirname(script_dir),"Model_Output"),arguments['<model-name>'] + ".txt"), "w")
 
             ###Write accuracies to file
             file.write("Training Loss\t" + str(h[0]) + "\nTraining Accuracy\t" + str(h[1]) + "\nValidation Loss\t" + str(r[0]) + "\nValidation Accuracy\t" + str(r[1]))
@@ -131,7 +131,7 @@ def main():
     elif(arguments['test']):
 
         ###Load the testing dataset
-        data = Dataset(dataDir + "/Test.gz",dataDir + "/Test_Labels.gz",0)
+        data = Dataset(os.path.join(dataDir,"Test.gz"),os.path.join(dataDir,"Test_Labels.gz"),0)
 
         modelNames = arguments['<model-names>']
         modelNames = modelNames.split(",")
@@ -165,7 +165,7 @@ def main():
     elif(arguments['explore']):
 
         ###Create dataset object using directory and partition amount in arguments
-        data = Dataset(dataDir + "/Train.gz", dataDir + "/Train_Labels.gz",
+        data = Dataset(os.path.join(dataDir,"Train.gz"), os.path.join(dataDir,"Train_Labels.gz"),
                        partition=float(arguments['--split-percent'][0]))
 
         ###Create model object from training data

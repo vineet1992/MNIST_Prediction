@@ -9,8 +9,8 @@ This object contains methods for training a model, testing a model, loading and 
 '''
 
 from keras.models import load_model
-from MNIST.ModelParser import ModelParser
-from MNIST.Exploration_Model import exploration_model
+from ModelParser import ModelParser
+from Exploration_Model import exploration_model
 import math
 import numpy as np
 import os
@@ -116,11 +116,11 @@ class Model:
         :return:  Returns true if the model was successfully serialized, and false otherwise
         '''
 
-        dir = script_dir + "/../Model_Output"
+        dir = os.path.join(os.path.dirname(script_dir),"Model_Output")
         if not os.path.isdir(dir):
             os.makedirs(dir)
 
-        output_file = dir + "/" + self.name + "_Model.hdf5"
+        output_file = os.path.join(dir,self.name + "_Model.hdf5")
 
         self.model.save(output_file)
 
@@ -134,31 +134,31 @@ class Model:
         :return: None
         '''
 
-        dir = script_dir + "/../" + hyprOutputDir
-        dir = dir + "/" + self.name
+        dir = os.path.join(os.path.dirname(script_dir),hyprOutputDir)
+        dir = os.path.join(dir,self.name)
 
         ###Load in scan file
-        r = ta.Reporting(dir + "/" + fileName)
+        r = ta.Reporting(os.path.join(dir,fileName))
 
 
 
         ###Plot correlation heatmap
         r.plot_corr()
-        mp.savefig(dir + '/Correlation.png')
+        mp.savefig(os.path.join(dir,'Correlation.png'))
 
         ###Plot histogram of metric accuracy
         r.plot_hist()
-        mp.savefig(dir + '/Histogram.png')
+        mp.savefig(os.path.join(dir, 'Histogram.png'))
 
         ###Bar Plots multi-dimensional
         r.plot_bars('--epochs', 'val_acc', '--batch', '--dense')
-        mp.savefig(dir + '/Training.png')
+        mp.savefig(os.path.join(dir,'Training.png'))
 
         r.plot_bars('--epochs','val_acc','--convlayers','--conv')
-        mp.savefig(dir + '/Convolutions.png')
+        mp.savefig(os.path.join(dir,'Convolutions.png'))
 
         r.plot_bars('--epochs', 'val_acc', '--layers', '--dense')
-        mp.savefig(dir + '/Fully_Connected.png')
+        mp.savefig(os.path.join(dir,'Fully_Connected.png'))
 
 
     def explore(self,params):
@@ -168,16 +168,16 @@ class Model:
         :return: The talos scan history
         '''
 
-        dir = script_dir + "/../" + hyprOutputDir
+        dir = os.path.join(os.path.dirname(script_dir),hyprOutputDir)
         if not os.path.isdir(dir):
             os.makedirs(dir)
 
-        dir = dir + "/" + self.name
+        dir = os.path.join(dir,self.name)
         if not os.path.isdir(dir):
             os.makedirs(dir)
 
 
-        name = dir + "/" + self.name
+        name = os.path.join(dir,self.name)
         x = self.reshape(self.data.getFullX())
         y = self.data.getFullY()
         h = ta.Scan(x, y, params=params,
@@ -200,14 +200,15 @@ class Model:
         script_dir = os.path.dirname(__file__)
 
         ###Path to Model Output directory
-        dir = script_dir + "/../Model_Output"
+        dir = os.path.join(os.path.dirname(script_dir),"Model_Output")
 
         ###If the path to this directory doesn't exist then the model was never trained
         if not os.path.isdir(dir):
+            print("Please ensure that the specified model file exists in the Model_Output directory")
             return False
 
         ###Open the HDF5 file
-        modelFile = dir + "/" + self.name + "_Model.hdf5"
+        modelFile = os.path.join(dir,self.name + "_Model.hdf5")
 
 
 

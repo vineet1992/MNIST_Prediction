@@ -50,7 +50,8 @@ class Dataset:
 
 
         ###Ensure correctness of the data
-        self.runTests()
+        if partition>0 and partition < 1:
+            self.runTests()
 
     def _load_data(self):
         '''Returns a shuffled list of Numpy 3D Matrices (x)
