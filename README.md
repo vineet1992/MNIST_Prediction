@@ -39,13 +39,13 @@ With this model architecture, I used Talos to do a random grid search over hyper
 
 ![](imgs/Figure_1.png)
 
-!(imgs/Figure_2.png)
+![](imgs/Figure_2.png)
 
 The second round (Figures 3 and 4) demonstrated that having a large number of epochs (at least 10) drives better model performance. In addition, having more fully connected layers and convolutional layers improved performance. Lastly I found that low dropout rate and small max pooling size was correlated with validation set accuracy, implying that the model was not prone to overfitting.
 
-!(imgs/Figure_3.png)
+![](imgs/Figure_3.png)
 
-!(imgs/Figure_4.png)
+![](imgs/Figure_4.png)
 
 Putting all of these results together I arrived at my first successful model architecture. This consisted of two layers of 32 convolutional filters (3x3 kernels) along with (2x2) max pooling and 25% dropout. This was then flattened and fed to two 256 neuron fully connected layers with 25% dropout again, and then the softmax. 
 
