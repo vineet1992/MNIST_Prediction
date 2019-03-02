@@ -37,7 +37,7 @@ First I made some model architecture decisions based upon the structure of this 
 
 With this model architecture, I used Talos to do a random grid search over hyperparameters to get a feel for how these impact validation set accuracy. I immediately found that having more than one convolutional layer, and a filter size of at least 16 was necessary for accurate output. In addition, I found that having at least 128 fully connected layers was necessary for training set accuracy. The best performing hyperparameters for this search consisted of learning rate set at 0.001 and batch size 1000 so these were fixed for my second hyperparameter search. Another observation I found was that there were no instances of overfitting (no instances of training set accuracy increasing with decreasing validation set accuracy). This implied that more complicated networks could be attempted to achieve better training accuracy.
 
-!(imgs/Figure_1.png)
+![](imgs/Figure_1.png)
 
 !(imgs/Figure_2.png)
 
