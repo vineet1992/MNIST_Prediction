@@ -13,7 +13,12 @@ Testing:
 
 ## Steps to Reproduce
 
-First, clone the repository and set up a virtual environment. Then install all dependencies using the pip command listed under the dependencies heading. Next, ensure you are in the project directory ("MNIST_Prediction") and follow the commands below.
+First, ensure you are using python 3.6. Then, clone the repository and set up a python virtual environment (using venv). The full list of dependencies for the project are laid out in the requirements.txt file. To install these requirements use the following command:
+
+    pip install -r requirements.txt 
+
+Ensure that you are the main directory of the project in order to access requirements.txt
+Next, ensure you are in the project directory ("MNIST_Prediction") and follow the commands below.
 
 The exact commands to reproduce this result are:
 
@@ -36,13 +41,6 @@ TODO
 
 The MNIST handwritten dataset is a popular benchmark for image classification algorithms, especially CNN's. The purpose of this project is to have an enclosed system for beginners to experiment with CNN architectures on the MNIST dataset without doing any extra work. The project includes commands for downloading the data, parsing a CNN model from a text file and training the CNN, Hyperparameter exploration using Talos, and Evaluating proposed CNN's on the test set and serializing output models.
 
-## Dependencies
-
-The full list of dependencies for the project are laid out in the requirements.txt file. For use, please first create a python virtual enviornment on your machine, and then use: 
-
-    pip install -r requirements.txt 
-
-Ensure that you are the main directory of the project in order to access requirements.txt
 
 # Downloading Data
 
