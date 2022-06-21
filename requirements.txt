@@ -24,7 +24,7 @@ kerasplotlib==0.1.4
 kiwisolver==1.0.1
 Markdown==3.0.1
 matplotlib==3.0.2
-numpy==1.16.1
+numpy==1.22.0
 pandas==0.24.1
 parso==0.3.4
 pathlib==1.0.1
